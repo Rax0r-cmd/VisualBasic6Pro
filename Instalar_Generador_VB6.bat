@@ -17,6 +17,7 @@ set "BASE_DIR=%~dp0"
 set "COMP_DIR=%BASE_DIR%Complemento_VB6"
 set "TARGET_DIR=%LOCALAPPDATA%\AntigravityVB6AddIn"
 set "SKILL_DIR=%USERPROFILE%\.gemini\config\skills\vb6-algoritmos-archivos"
+set "CONFIG_DIR=%USERPROFILE%\.gemini\config"
 
 if not exist "%COMP_DIR%\Addin.dll" (
     echo [ERROR] No se encontro la carpeta Complemento_VB6 en: %COMP_DIR%
@@ -49,19 +50,40 @@ powershell -Command "$entry='MyAddIn.Connect=3'; foreach($p in @(\"$env:windir\v
 echo [OK] Complemento y Skill instalados correctamente.
 echo.
 
-:: 4. Verificar Python, Pillow y Antigravity CLI en esta PC
+:: 4. Configurar modo automatico en Antigravity (config.json)
+if not exist "%CONFIG_DIR%" mkdir "%CONFIG_DIR%"
+powershell -Command "$cfgPath='%CONFIG_DIR%\config.json'; if(Test-Path $cfgPath){ try{$j=Get-Content $cfgPath -Raw | ConvertFrom-Json}catch{$j=[pscustomobject]@{}} } else { $j=[pscustomobject]@{} }; if(-not $j.userSettings){ $j | Add-Member -NotePropertyName 'userSettings' -NotePropertyValue ([pscustomobject]@{}) -Force }; $j.userSettings | Add-Member -NotePropertyName 'artifactReviewMode' -NotePropertyValue 'ARTIFACT_REVIEW_MODE_TURBO' -Force; $j.userSettings | Add-Member -NotePropertyName 'autoExecutionPolicy' -NotePropertyValue 'CASCADE_COMMANDS_AUTO_EXECUTION_EAGER' -Force; $j | ConvertTo-Json -Depth 10 | Set-Content -Path $cfgPath -Encoding UTF8"
+echo [OK] Politica de ejecucion automatica configurada.
+echo.
+
+:: 5. Verificar / Instalar Python 3 + Pillow
 where pythonw >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [AVISO] No se detecto Python 3 en esta PC. Instalalo desde python.org ^(marcando Add to PATH^).
+    echo [*] Python 3 no detectado. Instalando Python 3.12 automaticamente...
+    where winget >nul 2>&1
+    if %errorlevel% equ 0 (
+        winget install -e --id Python.Python.3.12 --accept-package-agreements --accept-source-agreements --silent
+    )
+    where pythonw >nul 2>&1
+    if %errorlevel% neq 0 (
+        echo [*] Descargando instalador oficial de Python 3.12...
+        powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://www.python.org/ftp/python/3.12.7/python-3.12.7-amd64.exe' -OutFile \"$env:TEMP\python_setup.exe\"; Start-Process -FilePath \"$env:TEMP\python_setup.exe\" -ArgumentList '/quiet','InstallAllUsers=1','PrependPath=1' -Wait; Remove-Item \"$env:TEMP\python_setup.exe\" -ErrorAction SilentlyContinue"
+    )
+    set "PATH=%ProgramFiles%\Python312;%ProgramFiles%\Python312\Scripts;%LOCALAPPDATA%\Programs\Python\Python312;%LOCALAPPDATA%\Programs\Python\Python312\Scripts;%PATH%"
 ) else (
-    echo [OK] Python detectado. Verificando libreria Pillow...
+    echo [OK] Python detectado.
+)
+
+where python >nul 2>&1
+if %errorlevel% equ 0 (
     python -c "import PIL" >nul 2>&1
     if %errorlevel% neq 0 (
-        echo [*] Instalando Pillow para soporte de capturas de pantalla...
+        echo [*] Instalando libreria Pillow para capturas de pantalla...
         python -m pip install pillow --quiet
     )
 )
 
+:: 6. Verificar / Instalar Antigravity CLI (agy)
 set "AGY_OK=0"
 if exist "%LOCALAPPDATA%\agy\bin\agy.exe" set "AGY_OK=1"
 if exist "%USERPROFILE%\.gemini\bin\agy.exe" set "AGY_OK=1"
@@ -69,7 +91,20 @@ where agy >nul 2>&1
 if %errorlevel% equ 0 set "AGY_OK=1"
 
 if "%AGY_OK%"=="0" (
-    echo [AVISO] No se detecto Antigravity CLI ^(agy^) en esta PC. Instalalo e inicia sesion para usar el generador.
+    echo [*] Antigravity CLI ^(agy^) no detectado. Intentando instalar automaticamente...
+    where winget >nul 2>&1
+    if %errorlevel% equ 0 (
+        winget install -e --id Google.Antigravity --accept-package-agreements --accept-source-agreements --silent >nul 2>&1
+    )
+    if not exist "%LOCALAPPDATA%\agy\bin\agy.exe" (
+        powershell -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $meta = Invoke-RestMethod -Uri 'https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/api/releases/latest?platform=win32-x64'; if($meta.url){ New-Item -ItemType Directory -Force -Path \"$env:LOCALAPPDATA\agy\bin\" | Out-Null; Invoke-WebRequest -Uri $meta.url -OutFile \"$env:LOCALAPPDATA\agy\bin\agy.exe\" } } catch {}"
+    )
+    if exist "%LOCALAPPDATA%\agy\bin\agy.exe" (
+        echo [OK] Antigravity CLI instalado en %LOCALAPPDATA%\agy\bin\agy.exe
+        echo [!] Importante: abre una terminal, ejecuta 'agy' e inicia sesion con tu cuenta de Google una vez.
+    ) else (
+        echo [AVISO] No se pudo descargar Antigravity CLI automaticamente. Instalalo manualmente e inicia sesion.
+    )
 ) else (
     echo [OK] Antigravity CLI detectado.
 )

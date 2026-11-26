@@ -1,9 +1,9 @@
 ---
 name: vb6-algoritmos-archivos
-description: EXCLUSIVO Y ÚNICAMENTE para Visual Basic 6.0 (VB6). Cátedra completa de Algoritmos (Hilet) para VB6 basada en 'Algoritmos - Archivos.pdf' y 'Apunte Algoritmos 2.0.pdf'. Incluye funciones de texto/fecha, Arrays dinámicos (ReDim Preserve), Types (UDT), Rutinas (Sub/Function), Manejo integral de Archivos (Random con Type y String*N, Input, Output, Append, Binary, Put, Get, LOF, EOF, FreeFile, App.Path), Matemáticas (Round del banquero, Int, Fix, Rnd, Randomize), Objeto Printer (CurrentX/Y, NewPage, EndDoc), Formularios MDI (MDIChild, Arrange), MSFlexGrid (TextMatrix y técnica de edición con TextBox flotante), y tipos Ordinales/No Ordinales. PROHIBIDO aplicar en VS Code, C#, .NET ni otros lenguajes o IDEs.
+description: EXCLUSIVO Y ÚNICAMENTE para Visual Basic 6.0 (VB6). Guía completa de Algoritmos para VB6 basada en 'Algoritmos - Archivos.pdf' y 'Apunte Algoritmos 2.0.pdf'. Incluye funciones de texto/fecha, Arrays dinámicos (ReDim Preserve), Types (UDT), Rutinas (Sub/Function), Manejo integral de Archivos (Random con Type y String*N, Input, Output, Append, Binary, Put, Get, LOF, EOF, FreeFile, App.Path), Matemáticas (Round del banquero, Int, Fix, Rnd, Randomize), Objeto Printer (CurrentX/Y, NewPage, EndDoc), Formularios MDI (MDIChild, Arrange), MSFlexGrid (TextMatrix y técnica de edición con TextBox flotante), y tipos Ordinales/No Ordinales. PROHIBIDO aplicar en VS Code, C#, .NET ni otros lenguajes o IDEs.
 ---
 
-# Skill: Algoritmos y Manejo de Datos en Visual Basic 6.0 (Cátedra Hilet)
+# Skill: Algoritmos y Manejo de Datos en Visual Basic 6.0
 
 > [!IMPORTANT]
 > **REGLA DE ÁMBITO ESTRICTO**:
