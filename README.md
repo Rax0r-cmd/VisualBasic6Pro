@@ -1,21 +1,48 @@
-# Visual Basic 6.0 Pro — Entorno con Generador Integrado
+<div align="center">
 
-Repositorio portable de **Microsoft Visual Basic 6.0** equipado con un complemento nativo de barra de herramientas para generación y edición asistida de formularios, módulos y código VB6 en tiempo real.
+# Visual Basic 6.0 Pro + Inteligencia Artificial
+
+**Entorno portable de Microsoft Visual Basic 6.0 con integración nativa de Inteligencia Artificial en el IDE.**
+
+![Visual Basic 6.0](https://img.shields.io/badge/Visual%20Basic-6.0-5C2D91?style=for-the-badge&logo=visual-studio&logoColor=white)
+![Inteligencia Artificial](https://img.shields.io/badge/Inteligencia%20Artificial-Antigravity%20CLI-0078D4?style=for-the-badge&logo=google-gemini&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Windows](https://img.shields.io/badge/Windows-x86%20%2F%20x64-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+![COM Add-In](https://img.shields.io/badge/COM%20Add--In-ActiveX%20DLL-2EA44F?style=for-the-badge)
+
+<br/>
+
+![Vista previa en Visual Basic 6.0](assets/preview.png)
+
+</div>
+
+---
+
+## ¿Qué incluye este repositorio?
+
+Un instalador completo y portable de **Microsoft Visual Basic 6.0** junto con un complemento nativo de **Inteligencia Artificial** integrado directamente en la barra de herramientas del IDE para crear y modificar formularios, controles visuales y lógica en tiempo real.
 
 ---
 
 ## Características Principales
 
-* **Integración nativa en el IDE**: Botón con icono nativo directamente en la barra de herramientas estándar de Visual Basic 6.0.
-* **Ejecución silenciosa en segundo plano**: No abre ventanas de consola encima del IDE; muestra el estado y una previsualización en vivo al apoyar el mouse sobre el botón (`TooltipText`).
-* **Recarga en tiempo real**: Al finalizar una tarea, los formularios y módulos creados o modificados se incorporan y actualizan automáticamente en el proyecto abierto sin necesidad de cerrar y volver a abrir VB6.
-* **Compatibilidad estricta con VB6**: Conversión automática a codificación **ANSI (Windows-1252)** y saltos de línea **CRLF (`\r\n`)** para evitar errores de carga en el diseñador.
-* **Soporte de capturas de pantalla**: Detecta imágenes en el portapapeles (con confirmación **Sí / No**) para recrear interfaces visuales a partir de una captura y limpia el portapapeles tras usarlas.
-* **Reglas de programación VB6 incluidas**:
-  * `Option Explicit` obligatorio en todos los archivos (`.frm`, `.bas`, `.cls`).
-  * Tipado estricto y limpieza de memoria (`Set objeto = Nothing`, `Unload Me`, `Erase`, `Close #n`).
-  * Manejo completo de archivos secuenciales (`Input`, `Output`, `Append`) y de acceso aleatorio (`Random` con `Type`, `String * N`, `FreeFile`, `App.Path`, `Put`, `Get`, `LOF`, `EOF`), `MSFlexGrid`, formularios `MDI`, objeto `Printer` y funciones estándar de VB6.
-  * Código limpio sin comentarios ni signos de apertura (`¿`, `¡`) en mensajes.
+| Característica | Descripción |
+| :--- | :--- |
+| **Botón nativo en el IDE** | Icono integrado en la barra estándar de Visual Basic 6.0 sin ventanas molestas ni modales innecesarios. |
+| **Ejecución silenciosa** | Corre en segundo plano sin abrir consolas CMD encima del editor; muestra el progreso en vivo al apoyar el mouse (`TooltipText`). |
+| **Recarga en tiempo real** | Los formularios (`.frm`), módulos (`.bas`) y clases (`.cls`) nuevos o modificados se actualizan en pantalla al instante sin cerrar el proyecto. |
+| **Compatibilidad VB6 estricta** | Conversión automática a codificación **ANSI (Windows-1252)** y saltos de línea **CRLF (`\r\n`)** para evitar errores de carga en el diseñador. |
+| **Lectura de capturas de pantalla** | Detecta imágenes en el portapapeles (con confirmación **Sí / No**) para replicar interfaces visuales automáticamente. |
+| **Estándares de código VB6** | `Option Explicit` obligatorio, tipado estricto, limpieza de memoria (`Set obj = Nothing`, `Unload Me`, `Erase`, `Close #n`), archivos `Random`/`Input`/`Output`/`Append`, `MSFlexGrid`, `MDI` y objeto `Printer`. |
+
+---
+
+## Stack Tecnológico
+
+* **IDE / Runtime:** Microsoft Visual Basic 6.0 (COM / `VBIDE` Extensibility)
+* **Motor de Inteligencia Artificial:** Antigravity CLI (`agy`) con ejecución automática
+* **Automatización y Conversión:** Python 3 + Pillow (`ImageGrab`)
+* **Instalación y Registro:** Batch + PowerShell (`regsvr32`, `vbaddin.ini`, Registro de Windows)
 
 ---
 
@@ -23,8 +50,10 @@ Repositorio portable de **Microsoft Visual Basic 6.0** equipado con un complemen
 
 ```text
 VisualBasic6Pro/
-├── Microsoft Visual Basic 6.0/   # Instalador de Visual Basic 6.0
-├── Complemento_VB6/              # Complemento COM, scripts de soporte y skill VB6
+├── assets/
+│   └── preview.png               # Vista previa del entorno en funcionamiento
+├── Complemento_VB6/              # Addin.dll, scripts de soporte y skill de VB6
+├── Microsoft Visual Basic 6.0/   # Instalador original de Visual Basic 6.0
 ├── Instalar_Generador_VB6.bat    # Instalador automático del complemento y dependencias
 └── README.md
 ```
@@ -33,24 +62,28 @@ VisualBasic6Pro/
 
 ## Instalación en cualquier PC
 
-1. **Clonar el repositorio**:
+1. **Clonar el repositorio**
    ```cmd
    git clone https://github.com/Rax0r-cmd/VisualBasic6Pro.git
    ```
-2. **Instalar Visual Basic 6.0**:
-   Ejecuta `Microsoft Visual Basic 6.0\setup.exe` e instala Visual Basic 6.0 normalmente (si aún no está instalado en el equipo).
-3. **Instalar el complemento y sus dependencias**:
-   Ejecuta **`Instalar_Generador_VB6.bat`**. El script se encargará automáticamente de:
-   * Copiar el complemento y la skill a las rutas dinámicas del usuario actual (`%LOCALAPPDATA%` y `%USERPROFILE%`).
-   * Registrar `Addin.dll` (compatible con Windows de 32 y 64 bits) y habilitarlo en `vbaddin.ini` y en el Registro de Windows.
-   * Configurar la política de ejecución automática (`autoExecutionPolicy`).
-   * Verificar e instalar **Python 3** (+ `Pillow`) y **Antigravity CLI (`agy`)** si no estuvieran presentes en la PC.
-4. *(Solo la primera vez en una PC nueva)*: Si `agy` se instaló recién, abre una terminal, ejecuta `agy` e inicia sesión con tu cuenta una única vez.
+
+2. **Instalar Visual Basic 6.0**
+   Ejecuta `Microsoft Visual Basic 6.0\setup.exe` e instala Visual Basic 6.0 por tu cuenta (si aún no está instalado en la PC).
+
+3. **Instalar el complemento de Inteligencia Artificial**
+   Ejecuta **`Instalar_Generador_VB6.bat`**. El instalador realiza todo de forma automática y dinámica para el usuario actual:
+   * Copia el complemento y la skill de VB6 en `%LOCALAPPDATA%` y `%USERPROFILE%`.
+   * Registra `Addin.dll` (compatible con Windows de 32 y 64 bits) y lo habilita en `vbaddin.ini` y en el Registro de Windows.
+   * Configura el modo de ejecución automática sin interrupciones.
+   * Verifica e instala **Python 3** (+ `Pillow`) y **Antigravity CLI (`agy`)** si no están presentes en la PC.
+
+4. **Primer inicio en una PC nueva**
+   Si `agy` se instaló por primera vez en esa computadora, abre una terminal, ejecuta `agy` e inicia sesión una única vez.
 
 ---
 
 ## Uso rápido dentro de VB6
 
-* **Desde el botón de la barra de herramientas**: Haz clic en el icono del complemento para escribir tu solicitud directamente (o si tienes el cursor sobre una línea de comentario `' ...` en el editor de código, la tomará como instrucción).
-* **Con captura de referencia**: Toma una captura con `Win + Shift + S`, haz clic en el botón del complemento y confirma **Sí** cuando te pregunte si deseas adjuntarla.
-* **Si el asistente requiere una respuesta**: El botón mostrará `[?]` junto al icono; haz clic para responder y continuará en segundo plano.
+* **Prompt directo:** Haz clic en el icono de Inteligencia Artificial en la barra superior para escribir tu pedido (o ubica el cursor sobre un comentario `' ...` en el código y haz clic en el icono).
+* **Con captura de referencia:** Toma una captura con `Win + Shift + S`, haz clic en el icono y confirma **Sí** cuando te pregunte si deseas adjuntarla.
+* **Si se requiere confirmación:** El icono mostrará `[?]` a su lado; haz clic para responder y continuará trabajando en segundo plano.
