@@ -87,3 +87,10 @@ VisualBasic6Pro/
 * **Prompt directo:** Haz clic en el icono de Inteligencia Artificial en la barra superior para escribir tu pedido (o ubica el cursor sobre un comentario `' ...` en el código y haz clic en el icono).
 * **Con captura de referencia:** Toma una captura con `Win + Shift + S`, haz clic en el icono y confirma **Sí** cuando te pregunte si deseas adjuntarla.
 * **Si se requiere confirmación:** El icono mostrará `[?]` a su lado; haz clic para responder y continuará trabajando en segundo plano.
+
+---
+
+## Desarrollado por
+
+**Jonathan Lester Tullo** — [@Rax0r-cmd](https://github.com/Rax0r-cmd)
+
