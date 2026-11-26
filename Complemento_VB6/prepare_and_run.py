@@ -190,7 +190,7 @@ def main():
         "3) PROHIBIDO agregar comentarios en el codigo (no uses apostrofes ' ni explicaciones dentro del codigo); entrega el codigo totalmente limpio sin comentarios.",
         "4) ESTILO NATURAL: En MsgBox, InputBox, Label y Caption, NUNCA uses signos de apertura '¿' ni '¡' (usa solo '?' al final, ej: 'Desea guardar...?') ni textos con '(s)' o estilo robotico; escribe simple y natural.",
         "5) NO hagas preguntas ni converses ni pidas aclaraciones salvo que falte un dato imposible de deducir; crea/modifica los archivos directamente en el directorio actual del proyecto.",
-        "6) Catedra de Algoritmos para VB6: archivos Random con Type y String * N, Open For Random con Len=Len(var), FreeFile, App.Path, Put, Get, LOF/Len, MSFlexGrid con TextMatrix, archivos secuenciales Input/Output/Append.",
+        "6) ARCHIVOS POR DEFECTO (.dat Random): Siempre que se pida trabajar con archivos o guardar datos, usa archivos .dat de Acceso Aleatorio (For Random) con Type y String * N, Open App.Path & '...' For Random As #1 Len = Len(var), conteo con (LOF(1) / Len(var)), Put para grabar, Get para leer y Close #1. NO uses archivos .txt salvo que el usuario pida explicitamente un .txt.",
     ]
 
     if has_image:

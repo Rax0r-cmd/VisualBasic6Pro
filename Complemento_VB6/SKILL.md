@@ -133,37 +133,44 @@ End Type
 ## 6. Persistencia y Manejo de Archivos (Algoritmos)
 
 En VB6 no se usa `FileSystemObject`, sino instrucciones nativas:
-1. **Canal e Identificador**: Usar siempre `FreeFile` (`Dim n As Integer: n = FreeFile`).
-2. **Ruta del Proyecto**: Usar siempre `App.Path` (`App.Path & "\datos.dat"`).
+1. **REGLA POR DEFECTO (`.dat` Random)**: Siempre que el usuario pida guardar, leer o manejar datos con archivos, **usar archivos binarios de Acceso Aleatorio (`.dat` con `For Random`, `Type ... End Type`, `Put`, `Get`, `LOF`)**. **NO usar `.txt` secuenciales** a menos que el usuario pida explícitamente un `.txt`.
+2. **Canal e Identificador**: Usar `FreeFile` (`Dim n As Integer: n = FreeFile`) o `#1`.
+3. **Ruta del Proyecto**: Usar siempre `App.Path` (ej. `App.Path & "\Archivos\Jugadores.dat"` o `App.Path & "\datos.dat"`, creando la carpeta con `If Dir$(App.Path & "\Archivos", vbDirectory) = "" Then MkDir App.Path & "\Archivos"` si corresponde).
 
-### A. Archivos de Acceso Aleatorio (`Random`)
+### A. Archivos de Acceso Aleatorio (`Random` — `.dat`)
 Permiten lectura y escritura directa por registro sin recorrer todo el archivo:
 1. **Definir el Type**: Las cadenas DEBEN tener longitud fija con `String * N`.
-2. **Abrir**: `Open App.Path & "\clientes.dat" For Random As #n Len = Len(regCliente)`.
-3. **Cálculo de Registros**:
+2. **Abrir**: `Open App.Path & "\Archivos\Jugadores.dat" For Random As #1 Len = Len(jugador)`.
+3. **Función para contar registros (`LOF / Len`)**:
    ```vb
-   Dim posFinal As Long
-   posFinal = LOF(n) / Len(regCliente)
+   Private Function NumJugadores() As Integer
+       Dim cantj As Integer
+       Open App.Path & "\Archivos\Jugadores.dat" For Random As #1 Len = Len(jugador)
+       cantj = (LOF(1) / Len(jugador))
+       Close #1
+       NumJugadores = cantj
+   End Function
    ```
 4. **Grabar (`Put`)**:
-   - Agregar nuevo al final: `Put #n, posFinal + 1, regCliente`.
-   - Modificar registro existente en posición `p`: `Put #n, p, regCliente`.
+   - Agregar nuevo al final: `Put #1, cantj + 1, jugador` (o `Put #n, posFinal + 1, regCliente`).
+   - Modificar registro existente en posición `p`: `Put #1, p, jugador`.
 5. **Leer (`Get`)**:
-   - Leer registro específico: `Get #n, p, regCliente`. Al mostrar strings fijos usar siempre `Trim$(regCliente.Nombre)`.
+   - Leer registro específico: `Get #1, p, jugador`. Al mostrar strings fijos usar siempre `Trim$(jugador.Nombre)`.
    - Recorrer todo el archivo:
      ```vb
-     Dim i As Long
-     Dim totalReg As Long
-     totalReg = LOF(n) / Len(regCliente)
+     Dim i As Integer
+     Dim totalReg As Integer
+     Open App.Path & "\Archivos\Jugadores.dat" For Random As #1 Len = Len(jugador)
+     totalReg = (LOF(1) / Len(jugador))
      For i = 1 To totalReg
-         Get #n, i, regCliente
-         ' Cargar en lista o grilla
+         Get #1, i, jugador
      Next i
+     Close #1
      ```
-     O mediante `While (EOF(n) = False)`.
-6. **Cerrar**: `Close #n`.
+     O mediante `While (EOF(1) = False)`.
+6. **Cerrar**: `Close #1` (o `Close #n`).
 
-### B. Archivos Secuenciales (`Input`, `Output`, `Append`)
+### B. Archivos Secuenciales (`Input`, `Output`, `Append` — solo si piden `.txt` explícitamente)
 - `Output`: Sobrescribe si existe (`Print #n, texto`).
 - `Append`: Agrega al final (`Print #n, texto`).
 - `Input`: Lectura (`Line Input #n, linea`).
