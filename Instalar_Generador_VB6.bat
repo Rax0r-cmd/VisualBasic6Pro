@@ -126,6 +126,23 @@ if "%AGY_OK%"=="0" (
     echo [OK] Antigravity CLI detectado.
 )
 
+:: 6b. Aplicar Tema Dracula Pro en el editor de Visual Basic 6.0
+echo.
+echo [*] Aplicando Tema Dracula Pro al editor de VB6...
+tasklist /fi "imagename eq VB6.EXE" 2>nul | find /i "VB6.EXE" >nul
+if %errorlevel% equ 0 (
+    echo [AVISO] Visual Basic 6.0 esta abierto. Cierralo y ejecuta Tema_Dracula_VB6.bat si no se aplican los colores.
+) else (
+    set "VBA_DLL="
+    if exist "%ProgramFiles(x86)%\Microsoft Visual Studio\VB98\VBA6.DLL" set "VBA_DLL=%ProgramFiles(x86)%\Microsoft Visual Studio\VB98\VBA6.DLL"
+    if "%VBA_DLL%"=="" if exist "%ProgramFiles%\Microsoft Visual Studio\VB98\VBA6.DLL" set "VBA_DLL=%ProgramFiles%\Microsoft Visual Studio\VB98\VBA6.DLL"
+    if not "%VBA_DLL%"=="" (
+        powershell -Command "$dll='%VBA_DLL%'; $bak=$dll+'.bak'; if(!(Test-Path $bak)){ Copy-Item $dll $bak -Force }; $bytes=[System.IO.File]::ReadAllBytes($bak); $orig=[byte[]](0xFF,0xFF,0xFF,0x00, 0xC0,0xC0,0xC0,0x00, 0x80,0x80,0x80,0x00, 0x00,0x00,0x00,0x00, 0xFF,0x00,0x00,0x00, 0x80,0x00,0x00,0x00, 0xFF,0xFF,0x00,0x00, 0x80,0x80,0x00,0x00, 0x00,0xFF,0x00,0x00, 0x00,0x80,0x00,0x00, 0x00,0xFF,0xFF,0x00, 0x00,0x80,0x80,0x00, 0x00,0x00,0xFF,0x00, 0x00,0x00,0x80,0x00, 0xFF,0x00,0xFF,0x00, 0x80,0x00,0x80,0x00); $drac=[byte[]](0x28,0x2A,0x36,0x00, 0x44,0x47,0x5A,0x00, 0xF8,0xF8,0xF2,0x00, 0x62,0x72,0xA4,0x00, 0x8B,0xE9,0xFD,0x00, 0x50,0xFA,0x7B,0x00, 0xFF,0xB8,0x6C,0x00, 0xFF,0x79,0xC6,0x00, 0xBD,0x93,0xF9,0x00, 0xFF,0x55,0x55,0x00, 0xF1,0xFA,0x8C,0x00, 0x21,0x22,0x2C,0x00, 0x19,0x1A,0x21,0x00, 0x62,0x72,0xA4,0x00, 0xF8,0xF8,0xF2,0x00, 0x00,0x00,0x00,0x00); $idx=-1; for($i=0; $i -le ($bytes.Length - 64); $i++){ if($bytes[$i] -eq 0xFF -and $bytes[$i+1] -eq 0xFF -and $bytes[$i+2] -eq 0xFF -and $bytes[$i+3] -eq 0x00){ $ok=$true; for($j=4;$j -lt 64;$j++){ if($bytes[$i+$j] -ne $orig[$j]){ $ok=$false; break } }; if($ok){ $idx=$i; break } } }; if($idx -ge 0){ [Array]::Copy($drac, 0, $bytes, $idx, 64); [System.IO.File]::WriteAllBytes($dll, $bytes); Write-Host '[OK] Paleta Dracula aplicada en VBA6.DLL' }"
+    )
+    powershell -Command "$reg='HKCU:\Software\Microsoft\VBA\Microsoft Visual Basic'; if(!(Test-Path $reg)){ New-Item -Path $reg -Force | Out-Null }; Set-ItemProperty -Path $reg -Name 'CodeBackColors' -Value '1 2 1 9 10 1 1 1 1 1 0 0 0 0 0 0' -Type String; Set-ItemProperty -Path $reg -Name 'CodeForeColors' -Value '3 3 10 1 3 4 8 5 11 3 0 0 0 0 0 0' -Type String; Set-ItemProperty -Path $reg -Name 'FontFace' -Value 'Consolas' -Type String; Set-ItemProperty -Path $reg -Name 'FontHeight' -Value 10 -Type DWord; Set-ItemProperty -Path $reg -Name 'FontCharSet' -Value 0 -Type DWord"
+    echo [OK] Tema Dracula Pro y fuente Consolas configurados.
+)
+
 :: 7. Verificacion final integral de la instalacion
 echo.
 echo [*] Verificando instalacion completa...
