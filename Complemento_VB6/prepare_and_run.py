@@ -129,8 +129,25 @@ def main():
         no_image = True
         args.remove("--no-image")
 
+    prompt_file = ""
+    if "--prompt-file" in args:
+        idx = args.index("--prompt-file")
+        if idx + 1 < len(args):
+            prompt_file = args[idx + 1]
+            del args[idx : idx + 2]
+        else:
+            args.remove("--prompt-file")
+
     workdir = args[0] if len(args) > 0 else os.getcwd()
     user_prompt = args[1] if len(args) > 1 else ""
+    if prompt_file and os.path.isfile(prompt_file):
+        try:
+            with open(prompt_file, "r", encoding="cp1252", errors="replace") as pf:
+                file_prompt = pf.read().strip()
+            if file_prompt:
+                user_prompt = file_prompt
+        except Exception:
+            pass
 
     if not os.path.isdir(workdir):
         workdir = os.getcwd()
@@ -191,7 +208,7 @@ def main():
         "4) ESTILO NATURAL: En MsgBox, InputBox, Label y Caption, NUNCA uses signos de apertura '¿' ni '¡' (usa solo '?' al final, ej: 'Desea guardar...?') ni textos con '(s)' o estilo robotico; escribe simple y natural.",
         "5) NO hagas preguntas ni converses ni pidas aclaraciones salvo que falte un dato imposible de deducir; crea/modifica los archivos directamente en el directorio actual del proyecto.",
         "6) ARCHIVOS POR DEFECTO (.dat Random): Siempre que se pida trabajar con archivos o guardar datos, usa archivos .dat de Acceso Aleatorio (For Random) con Type y String * N, Open App.Path & '...' For Random As #1 Len = Len(var), conteo con (LOF(1) / Len(var)), Put para grabar, Get para leer y Close #1. NO uses archivos .txt salvo que el usuario pida explicitamente un .txt.",
-        "7) PROYECTO .VBP: Si creas o modificas el archivo .vbp, asegurate siempre de incluir Startup=\"NombreDelFormularioInicial\" (ej. MDIForm1 o Form1) y nunca dejarlo vacio.",
+        "7) PROYECTO .VBP Y FORMULARIO INICIAL OBLIGATORIO: Todo proyecto DEBE tener siempre un objeto de inicio valido en el .vbp (Startup=\"NombreDelFormulario\", ej. MDIForm1 o frmLogin o Form1, o Startup=\"Sub Main\" con Sub Main() en Module1.bas). Si creas un formulario nuevo en un proyecto que no tiene formulario inicial configurado, asignalo automaticamente como Startup en el .vbp para que nunca tire error al ejecutar.",
     ]
 
     if has_image:

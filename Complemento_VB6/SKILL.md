@@ -47,6 +47,10 @@ description: EXCLUSIVO Y ÚNICAMENTE para Visual Basic 6.0 (VB6). Guía completa
    - **Prohibido** usar signos de apertura (`¿` ni `¡`) o paréntesis formales como `elemento(s)`.
    - Escribir mensajes simples, directos y naturales, usando solo `?` o `!` al final (ej.: `"Desea guardar los datos en lista.txt?"`).
 
+5. **Formulario inicial / `Main` obligatorio en el `.vbp`**:
+   - Todo proyecto debe tener siempre configurado un `Startup="..."` válido en el archivo `.vbp` (ya sea el formulario principal / `MDIForm1` / `frmLogin`, o `"Sub Main"` con su `Sub Main()` en un módulo `.bas`).
+   - Al crear formularios nuevos en un proyecto nuevo o sin inicio definido, configurar automáticamente el formulario principal como `Startup` en el `.vbp` para evitar el error *"Debe haber un formulario de inicio o un procedimiento Sub Main()"*.
+
 ---
 
 ## 2. Funciones de Texto y Conversión en VB6
