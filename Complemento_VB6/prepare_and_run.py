@@ -27,12 +27,32 @@ def write_status(state):
 def write_progress(msg):
     try:
         clean = " ".join(str(msg).split()).strip()
-        if len(clean) > 120:
-            clean = clean[:117] + "..."
+        if len(clean) > 240:
+            clean = clean[:237] + "..."
         with open(PROGRESS_FILE, "w", encoding="cp1252", errors="replace") as f:
             f.write(clean)
     except Exception:
         pass
+
+
+def build_final_summary(output_text):
+    if not output_text:
+        return "Listo: Archivos actualizados"
+    lines = [ln.strip() for ln in output_text.splitlines() if ln.strip()]
+    for ln in reversed(lines):
+        if "RESUMEN:" in ln.upper():
+            idx = ln.upper().find("RESUMEN:")
+            res = ln[idx + 8 :].strip(" -:*`")
+            if res:
+                return res
+    cleaned = []
+    for ln in lines:
+        s = ln.lstrip("#*-•> ").replace("`", "").replace("**", "").strip()
+        if s and not set(s) <= set("-=_"):
+            cleaned.append(s)
+    if not cleaned:
+        return "Listo: Archivos actualizados"
+    return " | ".join(cleaned[-3:])
 
 
 def title_spinner(has_image):
@@ -209,6 +229,7 @@ def main():
         "5) NO hagas preguntas ni converses ni pidas aclaraciones salvo que falte un dato imposible de deducir; crea/modifica los archivos directamente en el directorio actual del proyecto.",
         "6) ARCHIVOS POR DEFECTO (.dat Random): Siempre que se pida trabajar con archivos o guardar datos, usa archivos .dat de Acceso Aleatorio (For Random) con Type y String * N, Open App.Path & '...' For Random As #1 Len = Len(var), conteo con (LOF(1) / Len(var)), Put para grabar, Get para leer y Close #1. NO uses archivos .txt salvo que el usuario pida explicitamente un .txt.",
         "7) PROYECTO .VBP Y FORMULARIO INICIAL OBLIGATORIO: Todo proyecto DEBE tener siempre un objeto de inicio valido en el .vbp (Startup=\"NombreDelFormulario\", ej. MDIForm1 o frmLogin o Form1, o Startup=\"Sub Main\" con Sub Main() en Module1.bas). Si creas un formulario nuevo en un proyecto que no tiene formulario inicial configurado, asignalo automaticamente como Startup en el .vbp para que nunca tire error al ejecutar.",
+        "8) RESUMEN FINAL OBLIGATORIO: Al terminar tu respuesta, incluye SIEMPRE una ultima linea corta que empiece exactamente con 'RESUMEN: ' indicando los datos clave o pasos que el usuario necesita saber (ej: 'RESUMEN: Usuario: admin | Clave: 1234 | Inicio: frmLogin' o 'RESUMEN: Creado frmClientes.frm con clientes.dat').",
     ]
 
     if has_image:
@@ -291,9 +312,7 @@ def main():
             write_progress("Esperando respuesta [?] - Haz clic para responder")
             write_status("QUESTION")
         else:
-            last_lines = [ln.strip() for ln in output_text.splitlines() if ln.strip()]
-            summary = last_lines[-1] if last_lines else "Archivos actualizados correctamente"
-            write_progress(f"Listo: {summary}")
+            write_progress(build_final_summary(output_text))
             write_status("DONE")
     else:
         cmd.extend(["-i", full_prompt])
